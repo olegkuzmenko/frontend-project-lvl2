@@ -1,0 +1,26 @@
+{
+  "name": "gendiff",
+  "version": "1.0.0",
+  "description": "Compares two configuration files and shows a difference",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olegkuzmenko/frontend-project-lvl2.git"
+  },
+  "author": "Oleg Kuzmenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olegkuzmenko/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/olegkuzmenko/frontend-project-lvl2#readme",
+  "dependencies": {
+    "commander": "^6.0.0"
+  }
+}
