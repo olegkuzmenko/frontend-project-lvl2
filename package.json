@@ -22,10 +22,5 @@
   "homepage": "https://github.com/olegkuzmenko/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^6.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0"
   }
 }
