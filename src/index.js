@@ -33,5 +33,5 @@ export default (filepath1, filepath2) => {
 
   const diffInArr = allKeys.reduce(cd, []).sort(sortingCallback);
 
-  console.log(`{\n${diffInArr.map((d) => d.join(' ')).join('\n')}\n}`);
+  return `{\n${diffInArr.map((d) => d.join(' ')).join('\n')}\n}`;
 };
