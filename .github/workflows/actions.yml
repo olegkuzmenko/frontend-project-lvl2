@@ -15,19 +15,19 @@ jobs:
     steps:
 
       uses: actions/checkout@v2
-      name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
 
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
 
-      name: npm install, build
+    - name: npm install, build
       run: make start
 
-      name: run linter
+    - name: run linter
       run: make lint
 
-      name: test & publish code coverage
+    - name: test & publish code coverage
       uses: paambaati/codeclimate-action@v2.6.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
