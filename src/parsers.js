@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
+import ini from 'ini';
 
 export const getType = (pathString) => path.extname(pathString);
 
@@ -13,6 +14,8 @@ const getParser = (pathString) => {
     parser = JSON.parse;
   } else if (type === '.yml') {
     parser = yaml.safeLoad;
+  } else if (type === '.ini') {
+    parser = ini.parse;
   }
   if (parser === null) {
     throw new Error('wrong type');
