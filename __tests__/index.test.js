@@ -7,10 +7,16 @@ import gendiff from '../src/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const result = fs.readFileSync(`${__dirname}/../__fixtures__/result.txt`, 'utf-8');
 
-test('diff', () => {
+test('JSON.diff', () => {
   const before = '__fixtures__/before.json';
   const after = '__fixtures__/after.json';
-  const result = fs.readFileSync(`${__dirname}/../__fixtures__/result.txt`, 'utf-8');
+  expect(gendiff(before, after)).toEqual(result);
+});
+
+test('YAML.diff', () => {
+  const before = '__fixtures__/before.yml';
+  const after = '__fixtures__/after.yml';
   expect(gendiff(before, after)).toEqual(result);
 });
