@@ -18,25 +18,37 @@ const sortingCallback = (a, b) => {
 
 export const abcSort = (array) => array.sort(sortingCallback);
 
-export const styler = (diff, indent = 1) => {
+export const styler = (diff, depth = 1) => {
+  const space = '  ';
+
+  const formatValue = (value, depth) => {
+    if (!_.isObject(value)) {
+      return value;
+    }
+    return Object.keys(value).map((key) => {
+      const object = { name: key, value: value[key] };
+      return `{\n${space.repeat(depth * 2)}${object.name}: ${formatValue(object.value, depth + 1)}\n${space.repeat((depth - 1) * 2)}}`;
+    });
+  };
+
   const result = diff.map((d) => {
     if (d.type === 'modified') {
-      return `${'  '.repeat(indent)}- ${d.name}: ${d.value.before}\n${'  '.repeat(indent)}+ ${d.name}: ${d.value.after}\n`;
+      return `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.value.before, depth + 1)}\n${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.value.after, depth + 1)}\n`;
     }
     if (d.type === 'unmodified') {
-      return `${'  '.repeat(indent)}  ${d.name}: ${d.value}\n`;
+      return `${space.repeat(depth * 2)}${d.name}: ${formatValue(d.value, depth + 1)}\n`;
     }
     if (d.type === 'deleted') {
-      return `${'  '.repeat(indent)}- ${d.name}: ${d.value}\n`;
+      return `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
     }
     if (d.type === 'added') {
-      return `${'  '.repeat(indent)}+ ${d.name}: ${d.value}\n`;
+      return `${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
     }
     if (d.type === 'nested') {
-      return `${'  '.repeat(indent)}  ${d.name}: ${styler(d.children, indent + 2)}`;
+      return `${space.repeat(depth * 2)}${d.name}: ${styler(d.children, depth + 1)}\n`;
     }
   });
-  return `{\n${result.join('')}\n}`;
+  return `{\n${result.join('')}${space.repeat((depth - 1) * 2)}}`;
 };
 
 export const generateDiff = (object1, object2) => {
@@ -58,5 +70,6 @@ export const generateDiff = (object1, object2) => {
     return [...acc, { name: key, type: 'added', value: object2[key] }];
   };
 
-  return abcSort(allKeysArray.reduce(cd, []));
+  const result = abcSort(allKeysArray.reduce(cd, []));
+  return result;
 };
