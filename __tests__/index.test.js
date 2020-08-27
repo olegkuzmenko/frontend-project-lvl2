@@ -33,3 +33,15 @@ test('Nested.JSON.diff', () => {
   const after = '__fixtures__/after_nested.json';
   expect(gendiff(before, after)).toEqual(resultNested);
 });
+
+test('Nested.YAML.diff', () => {
+  const before = '__fixtures__/before_nested.yml';
+  const after = '__fixtures__/after_nested.yml';
+  expect(gendiff(before, after)).toEqual(resultNested);
+});
+
+test('Nested.INI.diff', () => {
+  const before = '__fixtures__/before_nested.ini';
+  const after = '__fixtures__/after_nested.ini';
+  expect(gendiff(before, after)).toEqual(resultNested);
+});

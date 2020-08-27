@@ -16,39 +16,49 @@ const sortingCallback = (a, b) => {
   return 0;
 };
 
-export const abcSort = (array) => array.sort(sortingCallback);
+export const abcSort = (coll) => coll.sort(sortingCallback);
 
-export const styler = (diff, depth = 1) => {
+/*
+const mapping = {
+  added: (name) => `${space.repeat(depth * 2 - 1)}+ ${name}: ${formatValue(d.value, depth + 1)}`\n,
+  deleted: (name) => {...},
+  unmodified: (name) => {...},
+  nested: (name, iter) => {...},
+  ...
+};
+*/
+
+export const stylish = (diff, depth = 1) => {
   const space = '  ';
 
   const formatValue = (value, depth) => {
     if (!_.isObject(value)) {
-      return value;
+      return value.toString();
     }
-    return Object.keys(value).map((key) => {
-      const object = { name: key, value: value[key] };
-      return `{\n${space.repeat(depth * 2)}${object.name}: ${formatValue(object.value, depth + 1)}\n${space.repeat((depth - 1) * 2)}}`;
+    const formatedObject = Object.keys(value).map((name) => {
+      const object = { name, value: value[name] };
+      return `${space.repeat(depth * 2)}${object.name}: ${formatValue(object.value, depth + 1)}\n`;
     });
+
+    return `{\n${formatedObject.join('')}${space.repeat((depth - 1) * 2)}}`;
   };
 
-  const result = diff.map((d) => {
+  const formatedString = diff.map((d) => {
+    let result = '';
     if (d.type === 'modified') {
-      return `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.value.before, depth + 1)}\n${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.value.after, depth + 1)}\n`;
+      result = `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.beforeValue, depth + 1)}\n${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.afterValue, depth + 1)}\n`;
+    } else if (d.type === 'unmodified') {
+      result = `${space.repeat(depth * 2)}${d.name}: ${formatValue(d.value, depth + 1)}\n`;
+    } else if (d.type === 'deleted') {
+      result = `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
+    } else if (d.type === 'added') {
+      result = `${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
+    } else if (d.type === 'nested') {
+      result = `${space.repeat(depth * 2)}${d.name}: ${stylish(d.children, depth + 1)}\n`;
     }
-    if (d.type === 'unmodified') {
-      return `${space.repeat(depth * 2)}${d.name}: ${formatValue(d.value, depth + 1)}\n`;
-    }
-    if (d.type === 'deleted') {
-      return `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
-    }
-    if (d.type === 'added') {
-      return `${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
-    }
-    if (d.type === 'nested') {
-      return `${space.repeat(depth * 2)}${d.name}: ${styler(d.children, depth + 1)}\n`;
-    }
+    return result;
   });
-  return `{\n${result.join('')}${space.repeat((depth - 1) * 2)}}`;
+  return `{\n${formatedString.join('')}${space.repeat((depth - 1) * 2)}}`;
 };
 
 export const generateDiff = (object1, object2) => {
@@ -57,12 +67,11 @@ export const generateDiff = (object1, object2) => {
   const cd = (acc, key) => {
     if (_.has(object1, key) && _.has(object2, key)) {
       if (_.isObject(object1[key]) && _.isObject(object2[key])) {
-        const node = key;
-        const children1 = object1[key];
-        const children2 = object2[key];
-        return abcSort([...acc, { name: node, type: 'nested', children: generateDiff(children1, children2) }]);
+        return [...acc, { name: key, type: 'nested', children: generateDiff(object1[key], object2[key]) }];
       }
-      return object1[key] === object2[key] ? [...acc, { name: key, type: 'unmodified', value: object1[key] }] : [...acc, { name: key, type: 'modified', value: { before: object1[key], after: object2[key] } }];
+      return object1[key] === object2[key] ? [...acc, { name: key, type: 'unmodified', value: object1[key] }] : [...acc, {
+        name: key, type: 'modified', beforeValue: object1[key], afterValue: object2[key],
+      }];
     }
     if (_.has(object1, key)) {
       return [...acc, { name: key, type: 'deleted', value: object1[key] }];
