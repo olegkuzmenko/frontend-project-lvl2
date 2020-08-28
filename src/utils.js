@@ -35,7 +35,6 @@ export const generateDiff = (object1, object2) => {
     }
     return [...acc, { name: key, type: 'added', value: object2[key] }];
   };
-
   const result = abcSort(allKeysArray.reduce(cd, []));
   return result;
 };

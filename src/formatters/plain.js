@@ -1,20 +1,31 @@
-const plain = (diff) => {
-  const formatedString = diff.reduce((acc, d) => {
+import _ from 'lodash';
+
+const formatValue = (value) => {
+  if (_.isObject(value)) {
+    return '[complex value]';
+  }
+  if (_.isBoolean(value)) {
+    return value;
+  }
+  return `'${String(value)}'`;
+};
+
+const plain = (diff, path = []) => {
+  const arr = diff.map((d) => {
     if (d.type === 'nested') {
-      acc = `${acc}.${d.name}`
-      return `${acc}.${d.name}${plain(d.cildren)}`;
+      return plain(d.children, [...path, d.name]);
     }
     if (d.type === 'added') {
-      return `Property ${acc}.${d.name} was added with value: ${d.value}\n`;
+      return `Property '${[...path, d.name].join('.')}' was added with value: ${formatValue(d.value)}\n`;
     }
-    if (d.type === 'modifided') {
-      return `${acc}.${d.name} was updated. From ${d.beforeValue} to ${d.afterValue}\n`;
+    if (d.type === 'modified') {
+      return `Property '${[...path, d.name].join('.')}' was updated. From ${formatValue(d.beforeValue)} to ${formatValue(d.afterValue)}\n`;
     }
     if (d.type === 'deleted') {
-      return `${acc}.${d.name} was removed\n`;
+      return `Property '${[...path, d.name].join('.')}' was removed\n`;
     }
-  }, '');
-  return formatedString.join('');
+  });
+  return _.flatten(arr).join('');
 };
 
 export default plain;

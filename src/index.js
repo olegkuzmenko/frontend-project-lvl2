@@ -12,5 +12,5 @@ export default (filepath1, filepath2) => {
 
   const object1 = parseData(readyPath1);
   const object2 = parseData(readyPath2);
-  console.log(plain(generateDiff(object1, object2)));
+  return plain(generateDiff(object1, object2));
 };
