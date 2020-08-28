@@ -8,7 +8,8 @@ import gendiff from '../src/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const result = fs.readFileSync(`${__dirname}/../__fixtures__/result.txt`, 'utf-8');
-const resultNested = fs.readFileSync(`${__dirname}/../__fixtures__/result_nested.txt`, 'utf-8');
+const resultStylish = fs.readFileSync(`${__dirname}/../__fixtures__/result_stylish.txt`, 'utf-8');
+const resultPlain = fs.readFileSync(`${__dirname}/../__fixtures__/result_plain.txt`, 'utf-8');
 
 test('JSON.diff', () => {
   const before = '__fixtures__/before.json';
@@ -28,20 +29,26 @@ test('INI.diff', () => {
   expect(gendiff(before, after)).toEqual(result);
 });
 
-test('Nested.JSON.diff', () => {
+test('Stylish.JSON.diff', () => {
   const before = '__fixtures__/before_nested.json';
   const after = '__fixtures__/after_nested.json';
-  expect(gendiff(before, after)).toEqual(resultNested);
+  expect(gendiff(before, after)).toEqual(resultStylish);
 });
 
-test('Nested.YAML.diff', () => {
+test('Stylish.YAML.diff', () => {
   const before = '__fixtures__/before_nested.yml';
   const after = '__fixtures__/after_nested.yml';
-  expect(gendiff(before, after)).toEqual(resultNested);
+  expect(gendiff(before, after)).toEqual(resultStylish);
 });
 
-test('Nested.INI.diff', () => {
+test('Stylish.INI.diff', () => {
   const before = '__fixtures__/before_nested.ini';
   const after = '__fixtures__/after_nested.ini';
-  expect(gendiff(before, after)).toEqual(resultNested);
+  expect(gendiff(before, after)).toEqual(resultStylish);
+});
+
+test('Plain.JSON.diff', () => {
+  const before = '__fixtures__/before_nested.ini';
+  const after = '__fixtures__/after_nested.ini';
+  expect(gendiff(before, after)).toEqual(resultPlain);
 });
