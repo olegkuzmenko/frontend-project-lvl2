@@ -12,18 +12,20 @@ const formatValue = (value) => {
 
 const plain = (diff, path = []) => {
   const arr = diff.map((d) => {
+    let string = '';
     if (d.type === 'nested') {
       return plain(d.children, [...path, d.name]);
     }
     if (d.type === 'added') {
-      return `Property '${[...path, d.name].join('.')}' was added with value: ${formatValue(d.value)}\n`;
+      string = `Property '${[...path, d.name].join('.')}' was added with value: ${formatValue(d.value)}\n`;
     }
     if (d.type === 'modified') {
-      return `Property '${[...path, d.name].join('.')}' was updated. From ${formatValue(d.beforeValue)} to ${formatValue(d.afterValue)}\n`;
+      string = `Property '${[...path, d.name].join('.')}' was updated. From ${formatValue(d.beforeValue)} to ${formatValue(d.afterValue)}\n`;
     }
     if (d.type === 'deleted') {
-      return `Property '${[...path, d.name].join('.')}' was removed\n`;
+      string = `Property '${[...path, d.name].join('.')}' was removed\n`;
     }
+    return string;
   });
   return _.flatten(arr).join('');
 };

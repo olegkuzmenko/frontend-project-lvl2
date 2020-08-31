@@ -1,5 +1,8 @@
 import path from 'path';
 import _ from 'lodash';
+import stylish from './formatters/stylish.js';
+import plain from './formatters/plain.js';
+import jsonFormatter from './formatters/json.js';
 
 export const generatePath = (filepath) => path.resolve(process.cwd(), filepath);
 
@@ -17,6 +20,20 @@ const sortingCallback = (a, b) => {
 };
 
 export const abcSort = (coll) => coll.sort(sortingCallback);
+
+export const format = (diff, type) => {
+  let result;
+  if (type === 'stylish') {
+    result = stylish(diff);
+  }
+  if (type === 'plain') {
+    result = plain(diff);
+  }
+  if (type === 'json') {
+    result = jsonFormatter(diff);
+  }
+  return result;
+};
 
 export const generateDiff = (object1, object2) => {
   const allKeysArray = makeKeysColl(object1, object2);

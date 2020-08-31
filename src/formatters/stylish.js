@@ -2,17 +2,16 @@ import _ from 'lodash';
 
 const stylish = (diff, depth = 1) => {
   const space = '  ';
-
-  const formatValue = (value, depth) => {
+  const formatValue = (value, level) => {
     if (!_.isObject(value)) {
       return value.toString();
     }
     const formatedObject = Object.keys(value).map((name) => {
       const object = { name, value: value[name] };
-      return `${space.repeat(depth * 2)}${object.name}: ${formatValue(object.value, depth + 1)}\n`;
+      return `${space.repeat(level * 2)}${object.name}: ${formatValue(object.value, level + 1)}\n`;
     });
 
-    return `{\n${formatedObject.join('')}${space.repeat((depth - 1) * 2)}}`;
+    return `{\n${formatedObject.join('')}${space.repeat((level - 1) * 2)}}`;
   };
 
   const formatedString = diff.map((d) => {
