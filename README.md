@@ -7,25 +7,25 @@
 **Difference Generator (genDiff)** is a handy comand line utility for finding the difference in two iterations of a file. The utility works with *.json, *.yml and *.ini files.
 
 ## Installation ##
-To install `genDiff`, copy the repository to your working directory, paste this code in the command line and then press `Enter`:
+To install genDiff, copy the repository to your working directory, paste this code in the command line and then press `Enter`:
 
 ```make start```
 
 ## Software
 
-You need `node.js` to run Brain Games (version — 14.x). 
+You need `node.js` to run genDiff (version — 14.x). 
 
 [How to install node.js](https://nodejs.org/en/download/package-manager/)
 
-You need `npm` to install Brain Games.
+You need `npm` to install genDiff.
 
 [How to use and update npm](https://www.npmjs.com/get-npm)
 
-You also need `make` utility to start Brain Games.
+You also need `make` utility to start genDiff.
 
 ## Usage
 
-To find `help` and `usage info` type ```gendif -h``` in your command line.
+To find `help` and `usage info` type ```gendiff -h``` in your command line.
 
 You can get the result in wide range of formats. To choose one use `--format` option.
 
