@@ -10,24 +10,27 @@ const formatValue = (value) => {
   return `'${String(value)}'`;
 };
 
-const plain = (diff, path = []) => {
-  const arr = diff.map((d) => {
-    let string = '';
-    if (d.type === 'nested') {
-      return plain(d.children, [...path, d.name]);
-    }
-    if (d.type === 'added') {
-      string = `Property '${[...path, d.name].join('.')}' was added with value: ${formatValue(d.value)}\n`;
-    }
-    if (d.type === 'modified') {
-      string = `Property '${[...path, d.name].join('.')}' was updated. From ${formatValue(d.beforeValue)} to ${formatValue(d.afterValue)}\n`;
-    }
-    if (d.type === 'deleted') {
-      string = `Property '${[...path, d.name].join('.')}' was removed\n`;
-    }
-    return string;
-  });
-  return _.flatten(arr).join('');
+const plain = (diff) => {
+  const inner = (tree, path) => {
+    const result = tree.map((node) => {
+      switch (node.type) {
+        case 'nested':
+          return inner(node.children, [...path, node.name]);
+        case 'added':
+          return `Property '${[...path, node.name].join('.')}' was added with value: ${formatValue(node.value)}\n`;
+        case 'modified':
+          return `Property '${[...path, node.name].join('.')}' was updated. From ${formatValue(node.beforeValue)} to ${formatValue(node.afterValue)}\n`;
+        case 'deleted':
+          return `Property '${[...path, node.name].join('.')}' was removed\n`;
+        case 'unmodified':
+          return '';
+        default:
+          throw new Error(`Wrong property value: ${node.type}`);
+      }
+    });
+    return result.flat().join('');
+  };
+  return inner(diff, []);
 };
 
 export default plain;

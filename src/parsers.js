@@ -1,33 +1,40 @@
 import path from 'path';
-import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
+import _ from 'lodash';
 
 export const getType = (pathString) => path.extname(pathString);
 
-const getData = (pathString) => fs.readFileSync(pathString, 'utf8');
+const convertValueToNumber = (object) => {
+  const keys = Object.keys(object);
+  const convertedObject = keys.reduce((acc, key) => {
+    if (_.isObject(object[key])) {
+      acc[key] = convertValueToNumber(object[key]);
+    } else {
+      !Number.isNaN(Number(object[key])) && typeof object[key] === 'string' ? acc[key] = Number(object[key]) : acc[key] = object[key];
+    }
+    return acc;
+  }, {});
+  return convertedObject;
+};
 
-const getParser = (pathString) => {
-  let parser;
+const rightIniParser = (data) => convertValueToNumber(ini.parse(data));
+
+export const getParser = (pathString) => {
   const type = getType(pathString);
-  if (type === '.json') {
-    parser = JSON.parse;
-  } else if (type === '.yml') {
-    parser = yaml.safeLoad;
-  } else if (type === '.ini') {
-    parser = ini.parse;
+  switch (type) {
+    case '.json':
+      return JSON.parse;
+    case '.yml':
+      return yaml.safeLoad;
+    case '.ini':
+      return rightIniParser;
+    default:
+      throw new Error(`Wrong type: ${type}`);
   }
-  if (parser === null) {
-    throw new Error('wrong type');
-  }
-  return parser;
 };
 
-export const parseData = (pathString) => {
-  const data = getData(pathString);
-  const parser = getParser(pathString);
-  return parser(data);
-};
+export const parseData = (data, parser) => parser(data);
 
 /*
 const getYaml = (pathString) => {
