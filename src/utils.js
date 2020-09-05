@@ -1,8 +1,5 @@
-import path from 'path';
 import fs from 'fs';
 import _ from 'lodash';
-
-//export const generatePath = (filepath) => path.resolve(process.cwd(), filepath);
 
 export const getData = (pathString) => fs.readFileSync(pathString, 'utf8');
 
@@ -22,8 +19,9 @@ const sortingCallback = (a, b) => {
 
 export const abcSort = (coll) => coll.sort(sortingCallback)
   .map((item) => {
+    const newItem = item;
     if (_.has(item, 'children')) {
-      item.children = abcSort(item.children);
+      newItem.children = abcSort(item.children);
     }
-    return item;
+    return newItem;
   });

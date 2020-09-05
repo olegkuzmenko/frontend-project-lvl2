@@ -10,8 +10,10 @@ const convertValueToNumber = (object) => {
   const convertedObject = keys.reduce((acc, key) => {
     if (_.isObject(object[key])) {
       acc[key] = convertValueToNumber(object[key]);
+    } else if (!Number.isNaN(Number(object[key])) && typeof object[key] === 'string') {
+      acc[key] = Number(object[key]);
     } else {
-      !Number.isNaN(Number(object[key])) && typeof object[key] === 'string' ? acc[key] = Number(object[key]) : acc[key] = object[key];
+      acc[key] = object[key];
     }
     return acc;
   }, {});
