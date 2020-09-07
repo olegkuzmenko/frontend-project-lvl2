@@ -1,35 +1,39 @@
 import _ from 'lodash';
 
-const stylish = (diff, depth = 1) => {
-  const space = '  ';
-  const formatValue = (value, level) => {
-    if (!_.isObject(value)) {
-      return value.toString();
-    }
-    const formatedObject = Object.keys(value).map((name) => {
-      const object = { name, value: value[name] };
-      return `${space.repeat(level * 2)}${object.name}: ${formatValue(object.value, level + 1)}\n`;
-    });
+const space = '  ';
 
-    return `{\n${formatedObject.join('')}${space.repeat((level - 1) * 2)}}`;
-  };
-
-  const formatedString = diff.map((d) => {
-    let result = '';
-    if (d.type === 'modified') {
-      result = `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.beforeValue, depth + 1)}\n${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.afterValue, depth + 1)}\n`;
-    } else if (d.type === 'unmodified') {
-      result = `${space.repeat(depth * 2)}${d.name}: ${formatValue(d.value, depth + 1)}\n`;
-    } else if (d.type === 'deleted') {
-      result = `${space.repeat(depth * 2 - 1)}- ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
-    } else if (d.type === 'added') {
-      result = `${space.repeat(depth * 2 - 1)}+ ${d.name}: ${formatValue(d.value, depth + 1)}\n`;
-    } else if (d.type === 'nested') {
-      result = `${space.repeat(depth * 2)}${d.name}: ${stylish(d.children, depth + 1)}\n`;
-    }
-    return result;
+const formatValue = (value, depth) => {
+  if (!_.isObject(value)) {
+    return value.toString();
+  }
+  const formatedString = Object.entries(value).map(([name, innerValue]) => {
+    const object = { name, value: innerValue };
+    return `${space.repeat(depth)}    ${object.name}: ${formatValue(object.value, depth + 2)}\n`;
   });
-  return `{\n${formatedString.join('')}${space.repeat((depth - 1) * 2)}}`;
+  return `{\n${formatedString.join('')}${space.repeat(depth)}}`;
+};
+
+const stylish = (diff) => {
+  const inner = (tree, depth) => {
+    const formatedString = tree.map((node) => {
+      switch (node.type) {
+        case 'modified':
+          return `${space.repeat(depth)}  - ${node.name}: ${formatValue(node.beforeValue, depth + 2)}\n${space.repeat(depth)}  + ${node.name}: ${formatValue(node.afterValue, depth + 2)}\n`;
+        case 'unmodified':
+          return `${space.repeat(depth)}    ${node.name}: ${formatValue(node.value, depth + 2)}\n`;
+        case 'deleted':
+          return `${space.repeat(depth)}  - ${node.name}: ${formatValue(node.value, depth + 2)}\n`;
+        case 'added':
+          return `${space.repeat(depth)}  + ${node.name}: ${formatValue(node.value, depth + 2)}\n`;
+        case 'nested':
+          return `${space.repeat(depth)}    ${node.name}: ${inner(node.children, depth + 2)}\n`;
+        default:
+          throw new Error(`Wrong type: ${node.type}`);
+      }
+    });
+    return `{\n${formatedString.join('')}${space.repeat(depth)}}`;
+  };
+  return inner(diff, 0);
 };
 
 export default stylish;

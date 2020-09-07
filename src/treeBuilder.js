@@ -1,8 +1,8 @@
 import _ from 'lodash';
-import { makeKeysColl, abcSort } from './utils.js';
+import { abcSort } from './utils.js';
 
 const generateDiff = (object1, object2) => {
-  const allKeysArray = makeKeysColl(object1, object2);
+  const allKeysArray = _.union(Object.keys(object1), Object.keys(object2));
 
   const result = allKeysArray.map((key) => {
     if (!_.has(object1, key)) {
