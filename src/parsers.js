@@ -3,8 +3,6 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 import _ from 'lodash';
 
-export const getType = (pathString) => path.extname(pathString);
-
 const convertValueToNumber = (object) => {
   const keys = Object.keys(object);
   const convertedObject = keys.reduce((acc, key) => {
@@ -22,8 +20,9 @@ const convertValueToNumber = (object) => {
 
 const rightIniParser = (data) => convertValueToNumber(ini.parse(data));
 
-export const getParser = (pathString) => {
-  const type = getType(pathString);
+export const getType = (pathString) => path.extname(pathString);
+
+export const getParser = (type) => {
   switch (type) {
     case '.json':
       return JSON.parse;

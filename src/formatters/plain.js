@@ -17,18 +17,18 @@ const plain = (diff) => {
         case 'nested':
           return inner(node.children, [...path, node.name]);
         case 'added':
-          return `Property '${[...path, node.name].join('.')}' was added with value: ${formatValue(node.value)}\n`;
+          return `Property '${[...path, node.name].join('.')}' was added with value: ${formatValue(node.value)}`;
         case 'modified':
-          return `Property '${[...path, node.name].join('.')}' was updated. From ${formatValue(node.beforeValue)} to ${formatValue(node.afterValue)}\n`;
+          return `Property '${[...path, node.name].join('.')}' was updated. From ${formatValue(node.beforeValue)} to ${formatValue(node.afterValue)}`;
         case 'deleted':
-          return `Property '${[...path, node.name].join('.')}' was removed\n`;
+          return `Property '${[...path, node.name].join('.')}' was removed`;
         case 'unmodified':
-          return '';
+          return [];
         default:
           throw new Error(`Wrong property value: ${node.type}`);
       }
     });
-    return result.flat().join('');
+    return result.flat().join('\n');
   };
   return inner(diff, []);
 };
