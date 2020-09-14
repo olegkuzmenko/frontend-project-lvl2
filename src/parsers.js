@@ -36,18 +36,3 @@ export const getParser = (type) => {
 };
 
 export const parseData = (data, parser) => parser(data);
-
-/*
-const getYaml = (pathString) => {
-  const obj = JSON.parse(fs.readFileSync(pathString, 'utf8'));
-  console.log(obj);
-  return yaml.safeDump(obj);
-};
-
-const getIni = (pathString) => {
-  const obj = JSON.parse(fs.readFileSync(pathString, 'utf8'));
-  console.log(obj);
-  return ini.encode(obj);
-};
-
-*/
