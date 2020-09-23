@@ -1,8 +1,11 @@
 # Difference Generator
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/olegkuzmenko/frontend-project-lvl2/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/e64a6e97fe835bc0fcf1/test_coverage)](https://codeclimate.com/github/olegkuzmenko/frontend-project-lvl2/test_coverage)
+
+![example workflow name](https://github.com/olegkuzmenko/frontend-project-lvl2/workflows/genDiff%20CI/badge.svg)
+
 
 **Difference Generator (genDiff)** is a handy comand line utility for finding the difference in two iterations of a file. The utility works with *.json, *.yml and *.ini files.
 
