@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import { abcSort } from './utils.js';
 
 const generateDiff = (object1, object2) => {
-  const allKeysArray = _.union(Object.keys(object1), Object.keys(object2));
+  const allKeysArray = _.union(Object.keys(object1), Object.keys(object2)).sort();
 
   const result = allKeysArray.map((key) => {
     if (!_.has(object1, key)) {
@@ -22,7 +21,7 @@ const generateDiff = (object1, object2) => {
     return { name: key, type: 'unmodified', value: object1[key] };
   });
 
-  return abcSort(result);
+  return result;
 };
 
 export default generateDiff;

@@ -10,9 +10,9 @@ const formatValue = (value) => {
   return `'${String(value)}'`;
 };
 
-const plain = (diff) => {
+const makeArrayofLines = (diff) => {
   const inner = (tree, path) => {
-    const result = tree.map((node) => {
+    const result = tree.flatMap((node) => {
       switch (node.type) {
         case 'nested':
           return inner(node.children, [...path, node.name]);
@@ -28,9 +28,11 @@ const plain = (diff) => {
           throw new Error(`Wrong property value: ${node.type}`);
       }
     });
-    return result.flat().join('\n');
+    return result;
   };
   return inner(diff, []);
 };
+
+const plain = (diff) => makeArrayofLines(diff).join('\n');
 
 export default plain;

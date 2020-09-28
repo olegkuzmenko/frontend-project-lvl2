@@ -1,26 +1,12 @@
-import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 import _ from 'lodash';
 
-const convertValueToNumber = (object) => {
-  const keys = Object.keys(object);
-  const convertedObject = keys.reduce((acc, key) => {
-    if (_.isObject(object[key])) {
-      acc[key] = convertValueToNumber(object[key]);
-    } else if (!Number.isNaN(Number(object[key])) && typeof object[key] === 'string') {
-      acc[key] = Number(object[key]);
-    } else {
-      acc[key] = object[key];
-    }
-    return acc;
-  }, {});
-  return convertedObject;
-};
+const numberIfValues = (obj) => _.mapValues(obj, (value) => (_.isObjectLike(value)
+  ? numberIfValues(value)
+  : (parseFloat(value) || value)));
 
-const rightIniParser = (data) => convertValueToNumber(ini.parse(data));
-
-export const getType = (pathString) => path.extname(pathString);
+const rightIniParser = (data) => numberIfValues(ini.parse(data));
 
 export const getParser = (type) => {
   switch (type) {
