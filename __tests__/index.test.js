@@ -18,6 +18,15 @@ test('try all', () => {
   });
 });
 
+test('try empty format', () => {
+  extentions.forEach((extention) => {
+    const beforeData = getFixturePath(`before${extention}`);
+    const afterData = getFixturePath(`after${extention}`);
+    const resultData = readFile('result_stylish');
+    expect(gendiff(beforeData, afterData)).toEqual(resultData);
+  });
+});
+
 /*
 const testData = [
   ['stylish', 'before.ini', 'after.json', 'result_stylish.txt'],

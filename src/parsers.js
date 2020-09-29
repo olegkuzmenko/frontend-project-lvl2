@@ -8,16 +8,16 @@ const numberIfValues = (obj) => _.mapValues(obj, (value) => (_.isObjectLike(valu
 
 const rightIniParser = (data) => numberIfValues(ini.parse(data));
 
-export const getParser = (type) => {
-  switch (type) {
-    case '.json':
+export const getParser = (fileType) => {
+  switch (fileType) {
+    case 'json':
       return JSON.parse;
-    case '.yml':
+    case 'yml':
       return yaml.safeLoad;
-    case '.ini':
+    case 'ini':
       return rightIniParser;
     default:
-      throw new Error(`Wrong type: ${type}`);
+      throw new Error(`Wrong type: ${fileType}`);
   }
 };
 
